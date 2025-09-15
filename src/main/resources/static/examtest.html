@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" ></script>
+
+</head>
+<body>
+	<h2>Exam Test</h2>
+	<a href="/exam">Get 방식 호출</a>
+	<form action="/exam" method="POST">
+		<input type="submit" value="Post 방식 호출"/>
+	</form>
+	<!-- form tag method = "get/post" 만 가능 -->
+	<form action="/exam" method="DELETE">
+		<input type="submit" value="Delete 방식 호출"/>
+	</form>
+	
+	<hr />
+	<div>
+		<select id="method">
+			<option value="get">GET</option>
+			<option value="post">POST</option>
+			<option value="delete">DELETE</option>
+			<option value="patch">PATCH</option>
+			<option value="put">PUT</option>
+		</select>
+		<input type="url" id="url" value="http://localhost:8080/exam" />
+		<button id="send">Send</button>
+		<button id="getXML">Get Xml</button>
+		<h2>Rest API 를 위해서는 Javascript 로 코딩해야한다</h2>
+		<div id="result"></div>
+	</div>
+	
+	<script>
+		const sendEl=document.querySelector('#send');
+		sendEl.onclick = async function(){
+			let method = document.querySelector('#method>option:checked').value;
+			let url    = document.querySelector('#url').value;
+			const resultEl = document.querySelector('#result');
+			// rest api 를 xhr 방식으로 불러온다
+			await fetch(url, {
+				method : method
+			})
+				.then(response => response.text())
+				.then(data => {
+					console.log(data);
+					resultEl.innerHTML = data;
+				})
+			//alert(method);			
+		}
+		
+		//xml 불러오기
+		const getXMLEl = document.querySelector('#getXML');
+		getXMLEl.onclick = function(){
+			let url = '/data.xml';
+			const resultEl = document.querySelector('#result');
+			fetch(url)
+				.then(response => response.text())
+				.then(text => {
+					alert(text);
+					// text -> XML Document 객체로 변환
+					const parser = new DOMParser();
+					const xmlDoc = parser.parseFromString(text, "application/xml");
+					
+					const toEl 		= xmlDoc.getElementsByTagName('to');
+					const fromEl 	= xmlDoc.getElementsByTagName('from');
+					const headingEl = xmlDoc.getElementsByTagName('heading');
+					const bodyEl 	= xmlDoc.getElementsByTagName('body');
+					let html   = `<ul>
+						<li>to:${toEl[0].innerHTML}</li>
+						<li>from:${fromEl[0].innerHTML}</li>
+						<li>heading:${headingEl[0].innerHTML}</li>
+						<li>body:${bodyEl[0].innerHTML}</li>
+					</ul>`
+					resultEl.innerHTML=html;
+				})
+				.then(error => console.error(error))
+		}
+	</script>
+</body>
+</html>
