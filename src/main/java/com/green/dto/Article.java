@@ -3,16 +3,24 @@ package com.green.dto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import lombok.Builder;
 
 // 실제 데이터베이스에 테이블을 생성해준다
 // import jakarta.peristence.
 @Entity           // db table  에 대응하는 클래스 : 애노테이션    
 @Builder
+@SequenceGenerator(
+		name = "ARTICLE_SEQ_GENERATOR",
+		sequenceName = "ARTICLE_SEQ",	// create sequence
+		initialValue = 1,	// 초기값 start with 1
+		allocationSize = 1	// 증가치 increment by 1
+)
 public class Article {
 	@Id                         // primary key
-	@GeneratedValue             // sequence : 번호 자동증가 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ARTICLE_SEQ_GENERATOR")  // sequence : 번호 자동증가 
 	private   Long     id;      // Long : null 입력가능, long <= null X  
 	
 	@Column                     // 데이터베이스 칼럼으로 인식
