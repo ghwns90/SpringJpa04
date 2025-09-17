@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.green.dto.Article;
 import com.green.dto.ArticleDto;
+import com.green.entity.Article;
 import com.green.repository.ArticleRepository;
 
 import jakarta.transaction.Transactional;

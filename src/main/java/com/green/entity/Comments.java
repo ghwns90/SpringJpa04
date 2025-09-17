@@ -1,4 +1,6 @@
-package com.green.dto;
+package com.green.entity;
+
+import com.green.dto.CommentsDto;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +15,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data	// @Getter, @Setter, @ToString, @equals, @hashcode
+@Data	// - @Getter, @Setter, @ToString, @equals, @hashcode
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -31,7 +33,7 @@ public class Comments {
 	
 	// 오라클 11g varchar2 최대 4000, -> CLOB
 	// 오라클 12c varchar2 최대 32000 -> 별도설정 필요
-	@Column
+	@Column(length=255)
 	private String body;
 	@Column
 	private String nickname;
@@ -41,4 +43,14 @@ public class Comments {
 	@ManyToOne							// 외래키 설정
 	@JoinColumn(name="article_id")		// 외래키 컬럼 이름 설정
 	private Article article;
+	
+	public static Comments createComment( CommentsDto dto, Article article ) {
+		return new Comments(
+				null,
+				dto.getBody(),
+				dto.getNickname(),
+				article
+				);
+				
+	}
 }

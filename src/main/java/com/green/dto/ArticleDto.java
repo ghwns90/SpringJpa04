@@ -1,5 +1,7 @@
 package com.green.dto;
 
+import com.green.entity.Article;
+
 public class ArticleDto {
 	// Field
 	private  String  title;
