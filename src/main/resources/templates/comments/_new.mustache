@@ -23,10 +23,15 @@
 
 <script>
 	const newCreateBtnEl = document.querySelector('#new-create-btn');
+	const nicknameEl = document.querySelector('#new-comments-nickname');
+	const bodyEl     = document.querySelector('#new-comments-body');
+	
 	newCreateBtnEl.addEventListener('click', () => {
+		if(nicknameEl.value.trim()=='' || bodyEl.value.trim()==''){
+			alert('닉네임이나 댓글 내용이 없습니다');
+			return false;
+		}
 		let url = '/api/articles/{{id}}/comments';
-		const nicknameEl = document.querySelector('#new-comments-nickname');
-		const bodyEl     = document.querySelector('#new-comments-body');
 		
 		const comment = {
 				nickname   : nicknameEl.value,
@@ -46,6 +51,8 @@
 					? '댓글이 등록되었습니다' : '댓글 등록 실패';
 				alert(msg);
 				location.reload();
-			})
-	})
+			}) // fetch end
+	}) // 새 글 쓰기 버튼 종료
+	
+	// 삭제
 </script>

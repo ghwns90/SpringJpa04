@@ -43,7 +43,22 @@ public class CommentsService {
 		// 3. 댓글 엔티티를 db에 저장
 		Comments created = commentsRepository.save(comments);
 		
-		CommentsDto newDto = CommentsDto.createCommentsDto(created);
+		CommentsDto newDto = CommentsDto.createCommentsDto(created);	
+		return newDto;
+	}
+
+	public CommentsDto update(CommentsDto commentsDto) {
+		
+		Long articleId = commentsDto.getArticleId();
+		
+		Article article = articleRepository.findById(articleId).orElseThrow(()-> new IllegalArgumentException("댓글 생성 실패! 대상 게시물이 없습니다"));
+		
+		Comments comments = Comments.createComment(commentsDto, article);
+		
+		Comments updated = commentsRepository.save(comments);
+		
+		CommentsDto newDto = CommentsDto.createCommentsDto(updated);
+		
 		return newDto;
 	}
 
