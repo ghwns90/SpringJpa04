@@ -1,6 +1,5 @@
 package com.green.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.green.entity.Comments;
 
 import lombok.AllArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class CommentsDto {
 
 	private Long id;				// 댓글 id
-	@JsonProperty("article_id")		
+	//@JsonProperty("article_id")		
 	private Long articleId;			// article 의 부모글 id
 	private String nickname;		// 닉네임
 	private String body;			// 댓글 본문

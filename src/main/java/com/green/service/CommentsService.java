@@ -18,6 +18,7 @@ public class CommentsService {
 	private CommentsRepository commentsRepository;
 	@Autowired
 	private ArticleRepository articleRepository;
+	
 	public List<Comments> getComments(Long id) {
 		
 		// ArticleId로 조회
@@ -47,19 +48,48 @@ public class CommentsService {
 		return newDto;
 	}
 
-	public CommentsDto update(CommentsDto commentsDto) {
+	// 수정
+	public CommentsDto update(Long id, CommentsDto dto) {
 		
-		Long articleId = commentsDto.getArticleId();
+		System.out.println(dto.getArticleId());
+		Long articleId = dto.getArticleId();
 		
-		Article article = articleRepository.findById(articleId).orElseThrow(()-> new IllegalArgumentException("댓글 생성 실패! 대상 게시물이 없습니다"));
+		// 1. 수정을 위한 댓글 조회
+		Comments target = commentsRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("실패 수정할 댓글 없슴"));
 		
-		Comments comments = Comments.createComment(commentsDto, article);
+		// 2. target의 내용중 수정할 내용을 변경
+		target.patch(dto);
 		
-		Comments updated = commentsRepository.save(comments);
+		// 3. 수정
+		Comments updated = commentsRepository.save(target);
 		
-		CommentsDto newDto = CommentsDto.createCommentsDto(updated);
+		CommentsDto commentsDto = CommentsDto.createCommentsDto(updated);
+				
+		//Article article = articleRepository.findById(articleId).orElseThrow(()-> new IllegalArgumentException("댓글 수정 실패! 대상 게시물이 없습니다"));
 		
-		return newDto;
+		//Comments comments = Comments.updateComment(dto, article);
+		
+		//Comments updated = commentsRepository.save(comments);
+		
+		//CommentsDto newDto = CommentsDto.createCommentsDto(updated);
+		
+		return commentsDto;
+	}
+
+	public void delete(CommentsDto dto) {
+		
+		Long id = dto.getId();
+		
+		System.out.println("id-------------------:" + id);
+		// 1. 삭제를 위한 댓글 조회
+		Comments target = commentsRepository.findById(id).orElseThrow(()-> new IllegalArgumentException("삭제 실패"));
+		
+		// 2. 삭제	
+		commentsRepository.delete(target);;
+		
+		//CommentsDto result = CommentsDto.createCommentsDto(target);
+				
+		// 성공적으로 삭제했으니 굳이 리턴필요 x
 	}
 
 }

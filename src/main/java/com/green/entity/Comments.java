@@ -51,6 +51,29 @@ public class Comments {
 				dto.getNickname(),
 				article
 				);
+	}
+	
+	// 수정할때 save는 ID에 null 이 들어가면 안됨. ID가 있으면 수정을하고 ID가 NULL이면 추가를 하기 때문에
+	public static Comments updateComment( CommentsDto dto, Article article) {
+		return new Comments(
+				dto.getId(),
+				dto.getBody(),
+				dto.getNickname(),
+				article
+				);
 				
+	}
+
+	// target <- dto
+	public void patch(CommentsDto commentsDto) {
+		if( this.id != commentsDto.getId()) {
+			throw new IllegalArgumentException("댓글 수정 실패");
+		}
+		if( commentsDto.getNickname() != null ) {
+			this.nickname = commentsDto.getNickname();
+		}
+		if( commentsDto.getBody() != null) {
+			this.body = commentsDto.getBody();
+		}
 	}
 }

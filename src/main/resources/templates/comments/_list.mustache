@@ -16,7 +16,10 @@
 					class="btn btn-sm btn-outline-primary" 
 					data-bs-toggle="modal" 
 					data-bs-target="#deleteModal" 
-					data-bs-whatever="@mdo">삭제</button>		
+					data-bs-id="{{id}}"
+					data-bs-nickname="{{nickname}}"
+					data-bs-body="{{body}}"
+					data-bs-article-id="{{article.id}}">삭제</button>		
 		</div>
 		<div class="card-body">
 		  	{{body}}
@@ -57,20 +60,19 @@
 </div>
 
 <!-- 모달 - 삭제 -->
-
 <!-- Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">삭제 확인</h5>
+        <h5 class="modal-title" id="deleteModalLabel">삭제 확인</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        삭제하시겠습니까?
+      	<span id="id"></span>를 삭제하시겠습니까?
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-primary" id="deleteYes">Yes</button>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
       </div>
     </div>
@@ -106,36 +108,82 @@ updateModalEl.addEventListener('show.bs.modal', (e)=>{
 
 </script>
 <script>
+
 	// modal 창의 수정버튼 클릭 - comment-update-btn
 	const commentUpdateBtnEl = document.querySelector('#comment-update-btn');
 	commentUpdateBtnEl.addEventListener('click', ()=>{
 		let comment = {
-				id        : document.querySelector('#update-id').value;
-				nickname  : document.querySelector('#update-nickname').value;
-				articleId : document.querySelector('#update-article-id').value;
-				body      : document.querySelector('#update-body').value;
+				id        : document.querySelector('#update-id').value,
+				nickname  : document.querySelector('#update-nickname').value,
+				articleId : document.querySelector('#update-article-id').value,
+				body      : document.querySelector('#update-body').value
 		}
-		let url    = '/api/comments/' + comment.id;
+		
+		let url    = '/api/comments/' + comment.id
 		let params = {
 				method : 'PATCH',
-				header : {"Content-Type" : "application/json;charset=utf-8"},
-				body   : JSON.stringify( comment );
+				headers : {'Content-Type' : 'application/json;charset=utf-8'},
+				body   : JSON.stringify( comment )
 		}
 		
 		fetch(url, params)
 			.then((response) => {
 				console.log(response);
 				let msg = (response.ok)
-							? "댓그리 수정되었습니다" : "댓글 수정 실패" ;
+							? "댓그리 수정되었습니다" : "댓글 수정 실패" 
 				alert(msg)
 				window.location.reload();
 			})
 	})
 	
+	// modal 창의 삭제버튼 클릭 - comment-delete-btn
+	const deleteModalEl = document.querySelector('#deleteModal');
+	deleteModal.addEventListener('show.bs.modal', (e) => {
+		console.log(e);
+		// 클릭한 삭제버튼을 찾는다	
+		const btn = e.relatedTarget;
+		// 삭제버튼의 data-bs-* 를 가져온다
+		let id        = btn.dataset.bsId;
+		let nickname  = btn.dataset.bsNickname;
+		let body      = btn.dataset.bsBody;
+		let articleId = btn.dataset.bsArticleId;
+		// <span id="id"></span> 에 넣어준다
+		const spanIdEl = deleteModalEl.querySelector('#id');
+		spanIdEl.innerHTML  = id;
+		spanIdEl.dataset.id = id;
+		
+		let comment = {
+				
+		}
+	});
 
-
-
-
+<!-- 댓글 삭제 버튼 -->
+	const deleteYesEl = document.getElementById('deleteYes');
+	
+	deleteYesEl.addEventListener('click', ()=>{
+		
+		let url     = '/api/article';
+		let params  = {
+				
+			method  : 'DELETE',
+			headers : {'Content-Type' : 'application/json;charset=utf-8'},
+			body    : JSON.stringify({
+						id : document.querySelector('#id').dataset.id
+					  })							  
+				  
+		}
+		//console.log(url);
+		fetch(url, params)
+		.then((response) => {
+			console.log(response);
+			let msg = (response.ok)
+						? "댓그리 삭제되었습니다" : "댓글 삭제 실패" 
+			alert(msg)
+			window.location.reload();
+		})	
+		
+	
+	});
 
 
 
